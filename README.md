@@ -34,7 +34,13 @@ Automated classification of Earth Observation (EO) satellite data plays a vital 
    * Hierarchical Vision Transformer utilizing shifted local windows for self-attention computation.
    * Captures fine-grained multi-scale context across complex satellite surface textures.
 
-All models were fine-tuned from ImageNet-pretrained checkpoints using the **Adam** optimizer with weight decay, **CrossEntropyLoss**, and a dynamic **ReduceLROnPlateau** learning rate scheduler over 50 epochs (batch size = 32).
+All models were fine-tuned end-to-end from ImageNet-pretrained checkpoints (`timm`) for 50 epochs, using **Adam** (learning rate 1e-4, weight decay 1e-4) and **CrossEntropyLoss**.
+
+| Model | Classification head | Batch size | LR scheduler |
+| :--- | :--- | :---: | :---: |
+| ResNet-50 | Dropout (0.3) + Linear | 64 | – |
+| Swin Transformer Tiny | Default `timm` head | 8 | ReduceLROnPlateau |
+| EfficientNet-B0 | Dropout (0.3) + Linear | 64 | ReduceLROnPlateau |
 
 ---
 
@@ -68,7 +74,44 @@ All models were fine-tuned from ImageNet-pretrained checkpoints using the **Adam
 
 ---
 
+## 🧪 Preliminary Experiment: Transfer Learning on CIFAR-100
+
+Before the EuroSAT benchmark, ImageNet-pretrained **VGG-16** and **ResNet-50** were evaluated on CIFAR-100 with frozen backbones (only the final layer trained, 10 epochs) and three training-split ratios.
+
+| Model | Train split | Test accuracy |
+| :--- | :---: | :---: |
+| VGG-16 | 50% / 60% / 70% | 60.7% / 60.5% / **61.7%** |
+| ResNet-50 | 50% / 60% / 70% | 57.3% / 58.4% / 58.4% |
+
+With frozen features, VGG-16 transferred slightly better than ResNet-50, and both improved modestly with more training data.
+
+---
+
 ## 🛠️ Tech Stack & Libraries
 * **Frameworks:** PyTorch, timm (PyTorch Image Models), torchvision, scikit-learn
 * **Analysis & Visualization:** NumPy, Pandas, Matplotlib, Seaborn (Confusion Matrices, Loss/Accuracy curves)
 * **Domain:** Remote Sensing, Earth Observation (EO), Computer Vision, Deep Learning
+
+---
+
+## 📁 Repository Structure
+
+```
+├── notebooks/
+│   ├── 01_cifar100_transfer_learning.ipynb   # Part 1: VGG-16 vs. ResNet-50 on CIFAR-100
+│   └── 02_eurosat_lulc_benchmark.ipynb       # Part 2: ResNet-50, Swin-T, EfficientNet-B0 on EuroSAT
+├── images/                                   # Figures used in this README
+├── Deep_Learning_Satellite_Image_Classification_Report.pdf
+└── requirements.txt
+```
+
+## ▶️ How to Run
+
+```bash
+git clone https://github.com/agathiba/satellite-lulc-deep-learning-eurosat.git
+cd satellite-lulc-deep-learning-eurosat
+pip install -r requirements.txt
+jupyter notebook notebooks/
+```
+
+Both datasets (EuroSAT and CIFAR-100) are downloaded automatically by `torchvision` into `./data` on first run. A CUDA-capable GPU is strongly recommended; training all three EuroSAT models takes roughly 7 hours on a single GPU. The train/validation/test split is random, so results may vary slightly between runs.
