@@ -13,6 +13,11 @@ Automated classification of Earth Observation (EO) satellite data plays a vital 
 * **Data Split:** 70% Training | 15% Validation | 15% Testing.
 * **Environment:** PyTorch, torchvision, timm, scikit-learn, CUDA GPU acceleration.
 
+<p align="center">
+  <img src="images/sample_predictions.png" width="480" alt="Sample EfficientNet-B0 predictions on EuroSAT Sentinel-2 tiles">
+  <br><em>Sample predictions of EfficientNet-B0 on Sentinel-2 tiles (true vs. predicted class)</em>
+</p>
+
 ---
 
 ## 🏗️ Evaluated Architectures & Methodologies
@@ -40,6 +45,21 @@ All models were fine-tuned from ImageNet-pretrained checkpoints using the **Adam
 | **EfficientNet-B0** | **98.89%** | **98.84%** | **5,368 sec** (~1.5 h) |
 | **Swin Transformer Tiny** | **98.69%** | **98.63%** | 11,656 sec (~3.2 h) |
 | **ResNet-50** | 97.73% | 97.60% | 7,666 sec (~2.1 h) |
+
+<p align="center">
+  <img src="images/model_comparison_accuracy.png" width="700" alt="Validation accuracy of the three models over 50 epochs">
+  <br><em>Validation accuracy of the three architectures over 50 epochs</em>
+</p>
+
+<p align="center">
+  <img src="images/training_curves.png" width="100%" alt="EfficientNet-B0 training curves and validation loss comparison">
+  <br><em>EfficientNet-B0 training/validation curves (left) and validation loss of all models (right)</em>
+</p>
+
+<p align="center">
+  <img src="images/confusion_matrix_efficientnet.png" width="560" alt="Confusion matrix of EfficientNet-B0 on the EuroSAT test set">
+  <br><em>Confusion matrix of EfficientNet-B0 on the test set</em>
+</p>
 
 ### Key Findings
 * **Optimal Trade-off:** EfficientNet-B0 achieved the highest overall accuracy (98.89%) with the lowest computational footprint and fastest training convergence.
