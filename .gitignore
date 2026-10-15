@@ -1,0 +1,7 @@
+# Datasets are downloaded automatically by torchvision
+data/
+# Model checkpoints
+*.pth
+*.pt
+.ipynb_checkpoints/
+__pycache__/
